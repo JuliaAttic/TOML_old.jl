@@ -2,18 +2,17 @@ __precompile__(true)
 
 module TOML
 
-    
     include("parser.jl")
     include("print.jl")
 
-    "Convert `TOML.Table` to `Dict{AbstractString,Any}`"
+    "Convert `TOML.Table` to `Dict{String,Any}`"
     function table2dict(tbl::Nullable{Table})
-        isnull(tbl) && return Dict{AbstractString,Any}()
+        isnull(tbl) && return Dict{String,Any}()
         return table2dict(get(tbl))
     end
 
     function table2dict(tbl::Table)
-        ret = Dict{AbstractString,Any}()
+        ret = Dict{String,Any}()
         for (k,v) in tbl.values
             if isa(v, Table)
                 ret[k] = table2dict(v)
