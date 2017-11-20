@@ -4,11 +4,11 @@ SOME(v::T) where {T} = Nullable{T}(v)
 
 "TOML Table"
 mutable struct Table
-    values::Dict{AbstractString,Any}
+    values::Dict{String,Any}
     defined::Bool
 end
 
-Table(defined::Bool) = Table(Dict{AbstractString,Any}(), defined)
+Table(defined::Bool) = Table(Dict{String,Any}(), defined)
 function Base.show(io::IO, tbl::Table, level::Int=1)
     Base.print(io, "T($(tbl.defined)){\n")
     for (k,v) in tbl.values
