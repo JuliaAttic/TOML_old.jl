@@ -3,7 +3,7 @@ NONE(::Type{T}) where {T} = Nullable{T}()
 SOME(v::T) where {T} = Nullable{T}(v)
 
 "TOML Table"
-mutable struct Table
+struct Table
     values::Dict{String,Any}
     defined::Bool
 end
@@ -34,18 +34,18 @@ Base.getindex(tbl::Table, key::AbstractString) = tbl.values[key]
 Base.haskey(tbl::Table, key::AbstractString) = haskey(tbl.values ,key)
 
 "Parser error exception"
-mutable struct ParserError <: Exception
+struct ParserError <: Exception
     lo::Int
     hi::Int
     msg::String
 end
 
 "TOML Parser"
-mutable struct Parser
-    input::IO
+struct Parser{IO_T <: IO}
+    input::IO_T
     errors::Vector{ParserError}
 
-    Parser(input::IO) = new(input, ParserError[])
+    Parser(input::IO_T) where {IO_T <: IO} = new{IO_T}(input, ParserError[])
 end
 Parser(input::String) = Parser(IOBuffer(input))
 Base.error(p::Parser, l, h, msg) = push!(p.errors, ParserError(l, h, msg))
@@ -568,11 +568,11 @@ function escape(p::Parser, st::Int, multiline::Bool)
             try
                 if length(snum) < len
                     error(p, st, st+len, "expected $len hex digits after a `$ch` escape")
-                    thorw()
+                    NONE()
                 end
                 if !all(isxdigit, snum)
                     error(p, st, st+len, "unknown string escape: `$snum`")
-                    thorw()
+                    NONE()
                 end
                 c = unescape_string(ucstr * snum)[1]
                 SOME(c)
