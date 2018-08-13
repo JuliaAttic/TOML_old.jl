@@ -1,0 +1,9 @@
+answer = 42
+neganswer = -42
+
+neg_zero = -0
+pos_zero = +0
+
+i1 = 1_000
+i2 = 5_349_221
+i3 = 1_2_3_4_5     # valid but inadvisable
